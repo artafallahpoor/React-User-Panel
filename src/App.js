@@ -3,44 +3,52 @@ import { useEffect, useState, useCallback } from 'react';
 // import bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-// import my other component 
+// import my other component
 import RegisterForm from './Components/Forms/RegisterForm/RegisterForm'
 import Panel from './Components/Panel/Panel';
 import LoginForm from './Components/Forms/LoginForm/LoginForm';
-
+import  {Route, Routes} from "react-router-dom"
 // import utils
 import { getStorage } from './utils/storage';
 
 const App = () => {
   const [toggle, setToggle] = useState('');
-    
+
   const changeToggle = (toggle) => setToggle(toggle)
-  
+
   const checkIsInitStorage = () => getStorage('users') && getStorage('users').length !== 0
-  
-  const checkUserIsRegister = useCallback(() => {
-    if (checkIsInitStorage()) {
-      const userId = getStorage('id')
-      const users = getStorage('users')
-      
-      const [userRegistered] = users.filter(user => user.id === userId)
-      
-      userRegistered.isLogin && changeToggle('panel')
-      !userRegistered.isLogin && changeToggle('login')
-    } else changeToggle('register')
-  }, [])
+  console.log()
+  const checkUserIsRegister = () => {
+    if(checkIsInitStorage() && getStorage('id')){
+      return true
+    } else {
+      return false
+    }
+  }
 
   useEffect(() => {
     checkUserIsRegister()
   }, [checkUserIsRegister])
-  
-  
+
+
   return (
-    <>
-      { toggle === 'register' && <RegisterForm onRegister={checkUserIsRegister}  onLogin={changeToggle} /> }
-      { toggle === 'login' && <LoginForm onRegister={changeToggle} onLogin={checkUserIsRegister} /> }
-      { toggle === 'panel' && <Panel onLogOut={checkUserIsRegister} /> }
-    </>
+      <Routes>
+        <Route
+          path="/register"
+          exact
+          element={<RegisterForm onRegister={checkUserIsRegister} />}
+        />
+        <Route
+          path="/login"
+          exact
+          element={<LoginForm onRegister={changeToggle} onLogin={checkUserIsRegister} />}
+        />
+        <Route
+          path="/"
+          exact
+          element={<Panel onLogOut={checkUserIsRegister} />}
+        />
+      </Routes>
   )
 }
 

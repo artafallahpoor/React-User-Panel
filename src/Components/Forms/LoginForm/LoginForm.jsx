@@ -12,12 +12,12 @@ import { useFormik } from 'formik'
 import { object, string } from 'yup'
 import PropTypes from 'prop-types'
 
-// import utils 
+// import utils
 import { getStorage, setUserId, updateStorage } from '../../../utils/storage'
 
 const LoginForm = ({ onRegister, onLogin }) => {
     const [submit, setSubmit] = useState(false)
-
+    
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -36,13 +36,13 @@ const LoginForm = ({ onRegister, onLogin }) => {
         onSubmit: ({ username, email, password }, { setFieldError }) => {
             const users = getStorage('users')
             const myVerifyUser = users && users.find(user => user.username === username)
-            
+
             if (users && myVerifyUser) {
                 if (myVerifyUser.email === email && myVerifyUser.password === password)
                     login(myVerifyUser)
                 else if (myVerifyUser.email !== email)
                     setFieldError('email', `your email isn't true`)
-                else 
+                else
                     setFieldError('password', `your password isn't correct`)
             } else
                 setFieldError('username', 'your username not found')
@@ -74,7 +74,7 @@ const LoginForm = ({ onRegister, onLogin }) => {
                     {...formik.getFieldProps('username')}
                 />
 
-                <FormInput  
+                <FormInput
                     className="mb-4"
                     name="email"
                     controlId="email-input"
@@ -101,7 +101,7 @@ const LoginForm = ({ onRegister, onLogin }) => {
                     {...formik.getFieldProps('password')}
                 />
 
-                <Button 
+                <Button
                     onClick={() => onRegister('register')}
                     className='shadow-none mt-4 p-0'
                     type="button"
@@ -109,11 +109,11 @@ const LoginForm = ({ onRegister, onLogin }) => {
                     you dont' have any account ?
                 </Button>
 
-                <Button 
-                    className={`${styles["submit-btn"]} w-100`} 
+                <Button
+                    className={`${styles["submit-btn"]} w-100`}
                     onClick={() => setSubmit(true)}
                     disabled={submit && !formik.isValid ? true : false}
-                    variant="primary" 
+                    variant="primary"
                     type="submit">
                     Login
                 </Button>
@@ -124,7 +124,7 @@ const LoginForm = ({ onRegister, onLogin }) => {
 
 // validate the component
 LoginForm.propTypes = {
-    onRegister: PropTypes.func.isRequired, 
+    onRegister: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
 }
 
